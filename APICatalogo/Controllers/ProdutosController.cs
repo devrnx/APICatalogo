@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace APICatalogo.Controllers
 {
     [ApiController]
-    [Route("v1/[controller]")]
+    [Route("[controller]")]
     public class ProdutosController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -16,42 +16,16 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<IEnumerable<Produto>> Get()
         {
-            var produtos = _context.Produtos.Select(x => new { x.ProdutoId, x.Nome, x.Preco });
-            return Ok(produtos);
-        }
+            var produtos = _context.Produtos.ToList();
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            var produto = _context.Produtos.SingleOrDefault(p => p.ProdutoId == id);
-            if (produto is null)
+            if (produtos is null)
             {
-                return NotFound();
+                return NotFound(produtos);
             }
-            return Ok(produto);
-        }
 
-        [HttpPost]
-        public IActionResult Post(Produto model)
-        {
-            _context.Produtos.Add(model);
-            return CreatedAtAction(nameof(model), GetById);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update()
-        {
-            var produtos = _context.Produtos;
             return Ok(produtos);
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete()
-        {
-            var produtos = _context.Produtos;
-            return Ok(produtos);
-        }
+        }    
     }
 }
