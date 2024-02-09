@@ -22,10 +22,25 @@ namespace APICatalogo.Controllers
 
             if (produtos is null)
             {
-                return NotFound(produtos);
+                return NotFound("Produto não encontrado.");
             }
 
-            return Ok(produtos);
-        }    
+            return produtos;
+        } 
+        
+        [HttpGet("{id}")]
+        public ActionResult<Produto> GetById(int id)
+        {
+            var produto = _context.Produtos.FirstOrDefault(x => x.ProdutoId == id);
+
+            if (produto is null)
+            {
+                return NotFound("Produto não encontrado.");
+            }
+
+            return produto;
+        }
+
+
     }
 }
