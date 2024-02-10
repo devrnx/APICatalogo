@@ -20,11 +20,19 @@ namespace APICatalogo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categorias = _context.Categorias
+            try
+            {
+                var categorias = _context.Categorias
                 .AsNoTracking()
                 .Take(10)
                 .ToList();
-            return Ok(categorias);
+                return Ok(categorias);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um problema ao tratar a sua solicitação.");
+            }
+            
         }
 
         [HttpGet("produtos")]
@@ -56,7 +64,7 @@ namespace APICatalogo.Controllers
         {
             if (categoria is null)
             {
-                return BadRequest();
+                return BadRequest("Dados inválidos.");
             }
 
             _context.Categorias.Add(categoria);
@@ -70,7 +78,7 @@ namespace APICatalogo.Controllers
         {
             if (categoria.CategoriaId != id)
             {
-                return BadRequest();
+                return BadRequest("Dados inválidos.");
             }
 
             _context.Entry(categoria).State = EntityState.Modified;
@@ -85,7 +93,7 @@ namespace APICatalogo.Controllers
 
             if (categoria is null)
             {
-                return NotFound();
+                return NotFound("Categoria não encontrada.");
             }
 
             _context.Remove(categoria);
