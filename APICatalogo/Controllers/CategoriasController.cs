@@ -20,7 +20,10 @@ namespace APICatalogo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categorias = _context.Categorias.ToList();
+            var categorias = _context.Categorias
+                .AsNoTracking()
+                .Take(10)
+                .ToList();
             return Ok(categorias);
         }
 
@@ -29,6 +32,8 @@ namespace APICatalogo.Controllers
         {
             var categorias = _context.Categorias
                 .Include(p => p.Produtos)
+                .Where(p => p.CategoriaId <= 5)
+                .AsNoTracking()
                 .ToList();
             return Ok(categorias);
         }
