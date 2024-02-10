@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace APICatalogo.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProdutosController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -20,12 +20,6 @@ namespace APICatalogo.Controllers
         public ActionResult<IEnumerable<Produto>> Get()
         {
             var produtos = _context.Produtos.ToList();
-
-            if (produtos is null)
-            {
-                return NotFound("Produto não encontrado.");
-            }
-
             return produtos;
         }
 
