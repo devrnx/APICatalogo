@@ -17,19 +17,19 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public async Task<ActionResult<IEnumerable<Produto>>> GetAsync()
         {
-            var produtos = _context.Produtos
+            var produtos = await _context.Produtos
                 .AsNoTracking()
                 .Take(10)
-                .ToList();
+                .ToListAsync();
             return produtos;
         }
 
-        [HttpGet("{id:int}", Name = "ObterProduto")]
-        public ActionResult<Produto> GetById(int id)
+        [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
+        public async Task<ActionResult<Produto>> GetByIdAsync(int id)
         {
-            var produto = _context.Produtos.FirstOrDefault(x => x.ProdutoId == id);
+            var produto = await _context.Produtos.FirstOrDefaultAsync(x => x.ProdutoId == id);
 
             if (produto is null)
             {
@@ -52,7 +52,7 @@ namespace APICatalogo.Controllers
             return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoId }, produto);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Post(int id, Produto produto)
         {
             if (!id.Equals(produto.ProdutoId))
