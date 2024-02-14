@@ -27,7 +27,7 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
-        public async Task<ActionResult<Produto>> GetByIdAsync(int id)
+        public async Task<ActionResult<Produto>> GetByIdAsync([FromQuery]int id)
         {
             var produto = await _context.Produtos.FirstOrDefaultAsync(x => x.ProdutoId == id);
 
